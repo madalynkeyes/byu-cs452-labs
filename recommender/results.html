@@ -1,0 +1,475 @@
+<html><head><meta charset='utf-8'>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 11px; margin: 20px; }
+  pre  { background: #f4f4f4; padding: 8px; font-size: 10px; white-space: pre-wrap; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 24px; }
+  th, td { border: 1px solid #999; padding: 4px; vertical-align: top; text-align: left; }
+  th { background: #e8e8e8; }
+</style>
+</head><body><h1>Podcast Recommender: Query Results</h1><h2>Q1: similar to 267:476</h2>
+<pre>
+WITH seg_limit AS (
+    SELECT id, content, start_time, end_time, podcast_id,
+           embedding <-> (SELECT embedding FROM segment WHERE id = %(seg_id)s) AS distance
+    FROM segment
+    WHERE id != %(seg_id)s
+    ORDER BY distance
+    LIMIT 5
+)
+SELECT podcast.title, seg_limit.id AS segment_id, content,
+       start_time, end_time, distance
+FROM seg_limit
+JOIN podcast ON seg_limit.podcast_id = podcast.id
+ORDER BY distance;
+</pre>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>title</th>
+      <th>segment_id</th>
+      <th>content</th>
+      <th>start_time</th>
+      <th>end_time</th>
+      <th>distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ryan Graves: UFOs, Fighter Jets, and Aliens | Lex Fridman Podcast #308</td>
+      <td>113:2792</td>
+      <td>encounters, human beings, if we were to meet another alien</td>
+      <td>6725.62</td>
+      <td>6729.86</td>
+      <td>0.648345</td>
+    </tr>
+    <tr>
+      <td>Richard Dawkins: Evolution, Intelligence, Simulation, and Memes | Lex Fridman Podcast #87</td>
+      <td>268:1019</td>
+      <td>Suppose we did meet an alien from outer space</td>
+      <td>2900.04</td>
+      <td>2903.08</td>
+      <td>0.655811</td>
+    </tr>
+    <tr>
+      <td>Jeffrey Shainline: Neuromorphic Computing and Optoelectronic Intelligence | Lex Fridman Podcast #225</td>
+      <td>305:3600</td>
+      <td>but if we think of alien civilizations out there</td>
+      <td>9479.96</td>
+      <td>9484.04</td>
+      <td>0.659543</td>
+    </tr>
+    <tr>
+      <td>Michio Kaku: Future of Humans, Aliens, Space Travel &amp; Physics | Lex Fridman Podcast #45</td>
+      <td>18:464</td>
+      <td>So I think when we meet alien life from outer space,</td>
+      <td>1316.86</td>
+      <td>1319.58</td>
+      <td>0.666203</td>
+    </tr>
+    <tr>
+      <td>Alien Debate: Sara Walker and Lee Cronin | Lex Fridman Podcast #279</td>
+      <td>71:989</td>
+      <td>because if aliens come to us</td>
+      <td>2342.34</td>
+      <td>2343.62</td>
+      <td>0.674294</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Q2: dissimilar to 267:476</h2>
+<pre>
+WITH seg_limit AS (
+    SELECT id, content, start_time, end_time, podcast_id,
+           embedding <-> (SELECT embedding FROM segment WHERE id = %(seg_id)s) AS distance
+    FROM segment
+    WHERE id != %(seg_id)s
+    ORDER BY distance DESC
+    LIMIT 5
+)
+SELECT podcast.title, seg_limit.id AS segment_id, content,
+       start_time, end_time, distance
+FROM seg_limit
+JOIN podcast ON seg_limit.podcast_id = podcast.id
+ORDER BY distance;
+</pre>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>title</th>
+      <th>segment_id</th>
+      <th>content</th>
+      <th>start_time</th>
+      <th>end_time</th>
+      <th>distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Joscha Bach: Nature of Reality, Dreams, and Consciousness | Lex Fridman Podcast #212</td>
+      <td>307:3933</td>
+      <td>and very few are first class and some are budget.</td>
+      <td>10648.64</td>
+      <td>10650.96</td>
+      <td>1.561634</td>
+    </tr>
+    <tr>
+      <td>Jeremy Howard: fast.ai Deep Learning Courses and Research | Lex Fridman Podcast #35</td>
+      <td>241:1436</td>
+      <td>which has all the courses pre-installed.</td>
+      <td>4068.90</td>
+      <td>4071.14</td>
+      <td>1.566332</td>
+    </tr>
+    <tr>
+      <td>Travis Stevens: Judo, Olympics, and Mental Toughness | Lex Fridman Podcast #223</td>
+      <td>283:1488</td>
+      <td>when I called down to get the sauna.</td>
+      <td>3709.34</td>
+      <td>3711.10</td>
+      <td>1.572553</td>
+    </tr>
+    <tr>
+      <td>Rana el Kaliouby: Emotion AI, Social Robots, and Self-Driving Cars | Lex Fridman Podcast #322</td>
+      <td>133:2006</td>
+      <td>for 94 car models.</td>
+      <td>5818.62</td>
+      <td>5820.82</td>
+      <td>1.586336</td>
+    </tr>
+    <tr>
+      <td>Jason Calacanis: Startups, Angel Investing, Capitalism, and Friendship | Lex Fridman Podcast #161</td>
+      <td>119:218</td>
+      <td>a 73 Mustang Grande in gold?</td>
+      <td>519.96</td>
+      <td>523.80</td>
+      <td>1.615769</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Q3: similar to 48:511</h2>
+<pre>
+WITH seg_limit AS (
+    SELECT id, content, start_time, end_time, podcast_id,
+           embedding <-> (SELECT embedding FROM segment WHERE id = %(seg_id)s) AS distance
+    FROM segment
+    WHERE id != %(seg_id)s
+    ORDER BY distance
+    LIMIT 5
+)
+SELECT podcast.title, seg_limit.id AS segment_id, content,
+       start_time, end_time, distance
+FROM seg_limit
+JOIN podcast ON seg_limit.podcast_id = podcast.id
+ORDER BY distance;
+</pre>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>title</th>
+      <th>segment_id</th>
+      <th>content</th>
+      <th>start_time</th>
+      <th>end_time</th>
+      <th>distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Andrew Huberman: Neuroscience of Optimal Performance | Lex Fridman Podcast #139</td>
+      <td>155:648</td>
+      <td>Is there something interesting to you or fundamental to you about the circuitry of the brain</td>
+      <td>3798.48</td>
+      <td>3805.84</td>
+      <td>0.652300</td>
+    </tr>
+    <tr>
+      <td>Cal Newport: Deep Work, Focus, Productivity, Email, and Social Media | Lex Fridman Podcast #166</td>
+      <td>61:3707</td>
+      <td>of what we might discover about neural networks?</td>
+      <td>8498.02</td>
+      <td>8500.10</td>
+      <td>0.712105</td>
+    </tr>
+    <tr>
+      <td>Matt Botvinick: Neuroscience, Psychology, and AI at DeepMind | Lex Fridman Podcast #106</td>
+      <td>48:512</td>
+      <td>And our brain is there. There's some there's quite a few differences. Are some of them to you either interesting or perhaps profound in terms of in terms of the gap we might want to try to close in trying to create a human level intelligence.</td>
+      <td>1846.84</td>
+      <td>1865.84</td>
+      <td>0.719560</td>
+    </tr>
+    <tr>
+      <td>Yann LeCun: Dark Matter of Intelligence and Self-Supervised Learning | Lex Fridman Podcast #258</td>
+      <td>276:2642</td>
+      <td>Have these, I mean, small pockets of beautiful complexity. Does that, do cellular automata, do these kinds of emergence and complex systems give you some intuition or guide your understanding of machine learning systems and neural networks and so on?</td>
+      <td>8628.16</td>
+      <td>8646.16</td>
+      <td>0.735722</td>
+    </tr>
+    <tr>
+      <td>Stephen Wolfram: Fundamental Theory of Physics, Life, and the Universe | Lex Fridman Podcast #124</td>
+      <td>2:152</td>
+      <td>So is there something like that with physics where so deep learning neural networks have been around for a long time?</td>
+      <td>610.86</td>
+      <td>618.86</td>
+      <td>0.736697</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Q4: similar to 51:56</h2>
+<pre>
+WITH seg_limit AS (
+    SELECT id, content, start_time, end_time, podcast_id,
+           embedding <-> (SELECT embedding FROM segment WHERE id = %(seg_id)s) AS distance
+    FROM segment
+    WHERE id != %(seg_id)s
+    ORDER BY distance
+    LIMIT 5
+)
+SELECT podcast.title, seg_limit.id AS segment_id, content,
+       start_time, end_time, distance
+FROM seg_limit
+JOIN podcast ON seg_limit.podcast_id = podcast.id
+ORDER BY distance;
+</pre>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>title</th>
+      <th>segment_id</th>
+      <th>content</th>
+      <th>start_time</th>
+      <th>end_time</th>
+      <th>distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>George Hotz: Hacking the Simulation &amp; Learning to Drive with Neural Nets | Lex Fridman Podcast #132</td>
+      <td>308:144</td>
+      <td>I mean, we don't understand dark energy, right?</td>
+      <td>500.44</td>
+      <td>502.60</td>
+      <td>0.668197</td>
+    </tr>
+    <tr>
+      <td>Lex Fridman: Ask Me Anything - AMA January 2021 | Lex Fridman Podcast</td>
+      <td>243:273</td>
+      <td>Like, what's up with this dark matter and dark energy stuff?</td>
+      <td>946.22</td>
+      <td>950.12</td>
+      <td>0.735551</td>
+    </tr>
+    <tr>
+      <td>Katherine de Kleer: Planets, Moons, Asteroids &amp; Life in Our Solar System | Lex Fridman Podcast #184</td>
+      <td>196:685</td>
+      <td>being like, what the hell is dark matter and dark energy?</td>
+      <td>2591.72</td>
+      <td>2595.96</td>
+      <td>0.763114</td>
+    </tr>
+    <tr>
+      <td>Alex Filippenko: Supernovae, Dark Energy, Aliens &amp; the Expanding Universe | Lex Fridman Podcast #137</td>
+      <td>51:36</td>
+      <td>Do we have any understanding of what the heck that thing is?</td>
+      <td>216.00</td>
+      <td>219.00</td>
+      <td>0.792202</td>
+    </tr>
+    <tr>
+      <td>Leonard Susskind: Quantum Mechanics, String Theory and Black Holes | Lex Fridman Podcast #41</td>
+      <td>122:831</td>
+      <td>That is a big question in physics right now.</td>
+      <td>2374.90</td>
+      <td>2377.62</td>
+      <td>0.802270</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Q5: episodes similar to segment 267:476</h2>
+<pre>
+WITH episode_avg AS (
+    -- One vector per episode: the average of all its segment vectors
+    SELECT podcast_id, AVG(embedding) AS avg_embedding
+    FROM segment
+    GROUP BY podcast_id
+)
+SELECT podcast.title,
+       e.avg_embedding <-> (SELECT embedding FROM segment WHERE id = %(seg_id)s) AS distance
+FROM episode_avg e
+JOIN podcast ON e.podcast_id = podcast.id
+-- Exclude the episode the query segment comes from
+WHERE e.podcast_id != (SELECT podcast_id FROM segment WHERE id = %(seg_id)s)
+ORDER BY distance
+LIMIT 5;
+</pre>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>title</th>
+      <th>distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sara Walker: The Origin of Life on Earth and Alien Worlds | Lex Fridman Podcast #198</td>
+      <td>0.782898</td>
+    </tr>
+    <tr>
+      <td>Martin Rees: Black Holes, Alien Life, Dark Matter, and the Big Bang | Lex Fridman Podcast #305</td>
+      <td>0.787950</td>
+    </tr>
+    <tr>
+      <td>Max Tegmark: Life 3.0 | Lex Fridman Podcast #1</td>
+      <td>0.788690</td>
+    </tr>
+    <tr>
+      <td>Sean Carroll: The Nature of the Universe, Life, and Intelligence | Lex Fridman Podcast #26</td>
+      <td>0.789065</td>
+    </tr>
+    <tr>
+      <td>Nick Bostrom: Simulation and Superintelligence | Lex Fridman Podcast #83</td>
+      <td>0.791121</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Q5: episodes similar to segment 48:511</h2>
+<pre>
+WITH episode_avg AS (
+    -- One vector per episode: the average of all its segment vectors
+    SELECT podcast_id, AVG(embedding) AS avg_embedding
+    FROM segment
+    GROUP BY podcast_id
+)
+SELECT podcast.title,
+       e.avg_embedding <-> (SELECT embedding FROM segment WHERE id = %(seg_id)s) AS distance
+FROM episode_avg e
+JOIN podcast ON e.podcast_id = podcast.id
+-- Exclude the episode the query segment comes from
+WHERE e.podcast_id != (SELECT podcast_id FROM segment WHERE id = %(seg_id)s)
+ORDER BY distance
+LIMIT 5;
+</pre>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>title</th>
+      <th>distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Christof Koch: Consciousness | Lex Fridman Podcast #2</td>
+      <td>0.753780</td>
+    </tr>
+    <tr>
+      <td>Dileep George: Brain-Inspired AI | Lex Fridman Podcast #115</td>
+      <td>0.760515</td>
+    </tr>
+    <tr>
+      <td>Tomaso Poggio: Brains, Minds, and Machines | Lex Fridman Podcast #13</td>
+      <td>0.761555</td>
+    </tr>
+    <tr>
+      <td>Elon Musk: Neuralink, AI, Autopilot, and the Pale Blue Dot | Lex Fridman Podcast #49</td>
+      <td>0.776152</td>
+    </tr>
+    <tr>
+      <td>Philip Goff: Consciousness, Panpsychism, and the Philosophy of Mind | Lex Fridman Podcast #261</td>
+      <td>0.787206</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Q5: episodes similar to segment 51:56</h2>
+<pre>
+WITH episode_avg AS (
+    -- One vector per episode: the average of all its segment vectors
+    SELECT podcast_id, AVG(embedding) AS avg_embedding
+    FROM segment
+    GROUP BY podcast_id
+)
+SELECT podcast.title,
+       e.avg_embedding <-> (SELECT embedding FROM segment WHERE id = %(seg_id)s) AS distance
+FROM episode_avg e
+JOIN podcast ON e.podcast_id = podcast.id
+-- Exclude the episode the query segment comes from
+WHERE e.podcast_id != (SELECT podcast_id FROM segment WHERE id = %(seg_id)s)
+ORDER BY distance
+LIMIT 5;
+</pre>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>title</th>
+      <th>distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sean Carroll: Quantum Mechanics and the Many-Worlds Interpretation | Lex Fridman Podcast #47</td>
+      <td>0.776714</td>
+    </tr>
+    <tr>
+      <td>Stephen Wolfram: Fundamental Theory of Physics, Life, and the Universe | Lex Fridman Podcast #124</td>
+      <td>0.808071</td>
+    </tr>
+    <tr>
+      <td>Donald Hoffman: Reality is an Illusion - How Evolution Hid the Truth | Lex Fridman Podcast #293</td>
+      <td>0.816583</td>
+    </tr>
+    <tr>
+      <td>Cumrun Vafa: String Theory | Lex Fridman Podcast #204</td>
+      <td>0.817347</td>
+    </tr>
+    <tr>
+      <td>Avi Loeb: Aliens, Black Holes, and the Mystery of the Oumuamua | Lex Fridman Podcast #154</td>
+      <td>0.825452</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Q6: episodes similar to VeH7qKZr0WI</h2>
+<pre>
+WITH episode_avg AS (
+    SELECT podcast_id, AVG(embedding) AS avg_embedding
+    FROM segment
+    GROUP BY podcast_id
+)
+SELECT podcast.title,
+       e.avg_embedding <-> (SELECT avg_embedding FROM episode_avg
+                            WHERE podcast_id = %(ep_id)s) AS distance
+FROM episode_avg e
+JOIN podcast ON e.podcast_id = podcast.id
+WHERE e.podcast_id != %(ep_id)s
+ORDER BY distance
+LIMIT 5;
+</pre>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>title</th>
+      <th>distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tyler Cowen: Economic Growth &amp; the Fight Against Conformity &amp; Mediocrity | Lex Fridman Podcast #174</td>
+      <td>0.119501</td>
+    </tr>
+    <tr>
+      <td>Eric Weinstein: Difficult Conversations, Freedom of Speech, and Physics | Lex Fridman Podcast #163</td>
+      <td>0.125714</td>
+    </tr>
+    <tr>
+      <td>Michael Malice and Yaron Brook: Ayn Rand, Human Nature, and Anarchy | Lex Fridman Podcast #178</td>
+      <td>0.128427</td>
+    </tr>
+    <tr>
+      <td>Steve Keen: Marxism, Capitalism, and Economics | Lex Fridman Podcast #303</td>
+      <td>0.129163</td>
+    </tr>
+    <tr>
+      <td>Michael Malice: The White Pill, Freedom, Hope, and Happiness Amidst Chaos | Lex Fridman Podcast #150</td>
+      <td>0.130409</td>
+    </tr>
+  </tbody>
+</table></body></html>
